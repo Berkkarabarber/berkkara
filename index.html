@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Berk Kara Randevu</title>
+<meta name="description" content="Berk Kara erkek kuaförü — online randevu">
+<meta name="theme-color" content="#c23129">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Berk Kara">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f3f4f6; --surface:#ffffff; --ink:#18202c; --muted:#5d6675; --line:#dcdfe5;
+  --red:#c23129; --blue:#2b56a0; --red-soft:#f8e3e1; --blue-soft:#e3eaf6; --ok:#1f7a4d; --ok-soft:#e1f2e8;
+  --display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#11151b; --surface:#1a2029; --ink:#e9ecf1; --muted:#9aa3b2; --line:#2c3440;
+  --red:#ec5b51; --blue:#7099de; --red-soft:#3a1f1e; --blue-soft:#1d2a40; --ok:#5cc58f; --ok-soft:#173025; color-scheme:dark}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;padding:0 16px 48px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:24px}
+.pole{height:10px;margin:0 -16px;background:repeating-linear-gradient(135deg,var(--red) 0 14px,var(--surface) 14px 28px,var(--blue) 28px 42px,var(--surface) 42px 56px)}
+header{display:flex;flex-direction:column;gap:6px;padding-top:22px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(52px,16vw,76px);line-height:.9;margin:0;text-transform:uppercase}
+.hours{display:flex;flex-wrap:wrap;gap:8px 16px;color:var(--muted);font-size:14px}
+.hours b{color:var(--ink);font-weight:600}
+section{display:flex;flex-direction:column;gap:12px}
+h2{font-family:var(--display);font-weight:800;font-size:24px;text-transform:uppercase;letter-spacing:.03em;margin:0;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+h2 small{font:600 12px var(--body);color:var(--muted);letter-spacing:.06em;text-transform:none}
+.svc{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:14px;text-align:left;cursor:pointer;font:inherit;display:flex;flex-direction:column;gap:2px}
+.opt .n{font-weight:700}.opt .p{font-family:var(--display);font-weight:800;font-size:30px;line-height:1.1}.opt .d{font-size:13px;color:var(--muted)}
+.opt[aria-pressed="true"]{border-color:var(--red);background:var(--red-soft)}
+.days{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px}
+.day{flex:0 0 64px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:8px 4px;cursor:pointer;font:inherit;display:flex;flex-direction:column;align-items:center}
+.day .w{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.day .n{font-family:var(--display);font-weight:800;font-size:28px;line-height:1.1}.day .m{font-size:11px;color:var(--muted)}
+.day[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft)}
+.day:disabled{opacity:.45;cursor:not-allowed;border-style:dashed}
+.times{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
+.t{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 0;font:600 15px var(--body);font-variant-numeric:tabular-nums;cursor:pointer}
+.t:disabled{color:var(--muted);text-decoration:line-through;opacity:.5;cursor:not-allowed}
+.t[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.note{color:var(--muted);font-size:14px;margin:0}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--muted)}
+input{font:500 16px var(--body);padding:12px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+input:focus,button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.summary{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.summary .what{font-weight:700}.summary .when{color:var(--muted);font-size:14px}
+.big{font-family:var(--display);font-weight:800;font-size:30px;font-variant-numeric:tabular-nums}
+.cta{border:0;background:var(--red);color:#fff;font:700 16px var(--body);padding:15px;border-radius:12px;cursor:pointer;width:100%}
+.cta:disabled{opacity:.45;cursor:not-allowed}
+.sec{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:600 15px var(--body);padding:13px;border-radius:12px;cursor:pointer;width:100%}
+.msg{border-radius:10px;padding:12px 14px;font-size:14px;background:var(--red-soft)}
+.done{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 20px;display:flex;flex-direction:column;gap:14px;text-align:center;align-items:center}
+.check{width:56px;height:56px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:grid;place-items:center;font-size:30px;font-weight:800}
+.done h2{justify-content:center;font-size:30px}
+.ticket{width:100%;border-top:1.5px dashed var(--line);padding-top:14px;display:grid;grid-template-columns:auto 1fr;gap:6px 16px;text-align:left}
+.ticket dt{color:var(--muted);font-size:13px}.ticket dd{margin:0;font-weight:700}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat .l{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stat.main{grid-column:1/-1;background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.stat.main .l{color:var(--bg);opacity:.7}.stat.main .big{font-size:48px;line-height:1.05}
+.list{display:flex;flex-direction:column;gap:8px}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+.row .tm{font-family:var(--display);font-weight:800;font-size:26px;font-variant-numeric:tabular-nums;line-height:1}
+.row .info{min-width:0}.row .info b{display:block;overflow-wrap:anywhere}.row .info span{color:var(--muted);font-size:13px}
+.row .pr{font-weight:700;font-variant-numeric:tabular-nums}
+.months{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-variant-numeric:tabular-nums}
+.months th,.months td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--line)}
+.months th{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.months td:last-child,.months th:last-child{text-align:right}
+.empty{border:1.5px dashed var(--line);border-radius:12px;padding:18px;color:var(--muted);text-align:center;font-size:14px}
+.link{background:none;border:0;color:var(--muted);font:500 13px var(--body);text-decoration:underline;cursor:pointer;align-self:center;padding:8px}
+.loading{opacity:.55;pointer-events:none}
+.chip{display:inline-block;font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.chip.wait{background:var(--blue-soft);color:var(--blue)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.no{background:var(--red-soft);color:var(--red)}
+.row.pend{grid-template-columns:auto 1fr;align-items:start}
+.acts{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.acts button{font:700 14px var(--body);padding:11px;border-radius:10px;cursor:pointer;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.acts .yes{background:var(--ok);border-color:var(--ok);color:#fff}
+.acts .no{color:var(--red)}
+.acts button:disabled{opacity:.5;cursor:wait}
+.mini{font:600 12px var(--body);padding:6px 10px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--red);cursor:pointer}
+.mini:disabled{opacity:.5;cursor:wait}
+.stack{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.h{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 0;font:600 14px var(--body);font-variant-numeric:tabular-nums;cursor:pointer;display:flex;flex-direction:column;align-items:center;line-height:1.2}
+.h small{font:600 10px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.h.closed{background:var(--red-soft);border-color:var(--red)}
+.h.closed small{color:var(--red)}
+.h.booked{opacity:.55;cursor:not-allowed}
+.h:disabled{cursor:wait}
+.bar{display:flex;gap:8px;flex-wrap:wrap}
+.bar .sec{width:auto;flex:1;padding:10px;font-size:14px}
+.att{display:flex;gap:6px}
+.att .mini{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="pole" aria-hidden="true"></div>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Erkek Kuaförü</span>
+    <h1>Berk Kara</h1>
+    <div class="hours"><span>Salı – Pazar <b>10:00 – 21:00</b></span><span>Pazartesi <b>kapalı</b></span></div>
+  </header>
+
+  <!-- MÜŞTERİ -->
+  <div id="book" style="display:flex;flex-direction:column;gap:24px">
+    <section id="mineSec" hidden><h2>Randevuların</h2><div class="list" id="mine"></div>
+      <button class="sec" id="remindMine" type="button" hidden>🔔 Randevudan 2 saat önce hatırlat</button>
+      <p class="note" id="remindMineMsg" hidden></p></section>
+    <section><h2>Hizmet</h2><div class="svc" id="svc"></div></section>
+    <section><h2>Gün</h2><div class="days" id="days"></div></section>
+    <section>
+      <h2>Saat <small id="dayLabel"></small></h2>
+      <div class="times" id="times"></div>
+      <p class="note" id="timesNote" hidden></p>
+    </section>
+    <section>
+      <h2>Adın soyadın</h2>
+      <label for="name">Randevu bu isimle kaydedilir<input id="name" autocomplete="name" placeholder="Örn. Mehmet Yılmaz"></label>
+      <label for="phone"><span id="phoneLabel">Telefon (isteğe bağlı, gerekirse seni arayabilmemiz için)</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="05xx xxx xx xx"></label>
+      <div id="codeWrap" hidden style="display:flex;flex-direction:column;gap:6px">
+        <label for="smsCode"><span id="codeNote">Telefonuna gelen kodu yaz</span><input id="smsCode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="6 haneli kod"></label>
+        <button class="link" id="resend" type="button" style="align-self:flex-start;padding:0">Kodu tekrar gönder</button>
+      </div>
+      <div class="summary" id="summary"></div>
+      <button class="cta" id="submit" type="button">Randevuyu onayla</button>
+      <div class="msg" id="msg" hidden></div>
+    </section>
+    <button class="link" id="toPanel" type="button" hidden>Berber paneline dön</button>
+  </div>
+
+  <!-- ONAY -->
+  <div id="done" hidden>
+    <div class="done">
+      <div class="check" aria-hidden="true">✓</div>
+      <h2>Randevun alındı</h2>
+      <p class="note">Randevun kesinleşti, seni bekliyoruz. Bu sayfanın en üstündeki “Randevuların” kısmından görebilir, gerekirse iptal edebilirsin.</p>
+      <dl class="ticket" id="ticket"></dl>
+      <button class="sec" id="remindDone" type="button" hidden>🔔 Randevudan 2 saat önce hatırlat</button>
+      <p class="note" id="remindDoneMsg" hidden></p>
+      <p class="note">Gelemeyeceksen lütfen yukarıdaki “Randevuların” kısmından iptal et.</p>
+      <button class="sec" id="again" type="button">Yeni randevu al</button>
+    </div>
+  </div>
+
+  <!-- BERBER -->
+  <div id="panel" hidden style="flex-direction:column;gap:24px">
+    <section id="login">
+      <h2>Berber paneli</h2>
+      <label for="pin">Şifre<input id="pin" type="password" autocomplete="current-password"></label>
+      <button class="cta" id="pinBtn" type="button">Giriş yap</button>
+      <div class="msg" id="pinMsg" hidden></div>
+    </section>
+    <div id="dash" hidden style="display:flex;flex-direction:column;gap:24px">
+      <div class="msg" id="dashMsg" hidden></div>
+      <section id="notifSec">
+        <button class="sec" id="notifBtn" type="button">🔔 Yeni randevu bildirimlerini aç</button>
+        <p class="note" id="notifMsg" hidden></p>
+      </section>
+      <section id="pendSec">
+        <h2>Onay bekleyenler <small id="pPendCount"></small></h2>
+        <div class="list" id="pPending"></div>
+      </section>
+      <section>
+        <h2>Bu ay <small id="monthName"></small></h2>
+        <div class="stats">
+          <div class="stat main"><div class="l">Aylık kazanç</div><div class="big" id="sMonth">–</div></div>
+          <div class="stat"><div class="l">Şu ana kadar</div><div class="big" id="sEarned">–</div></div>
+          <div class="stat"><div class="l">Randevu</div><div class="big" id="sCount">–</div></div>
+        </div>
+        <p class="note">Aylık kazanç, bu ayın onaylanmış randevularını (yaklaşanlar dahil) kapsar. Bekleyen ve reddedilenler sayılmaz.</p>
+      </section>
+      <section>
+        <h2>Randevular <small id="pDayLabel"></small></h2>
+        <div class="days" id="pDays"></div>
+        <p class="note">Saate dokunarak kapat ya da aç. Kapalı saatlere müşteri randevu alamaz.</p>
+        <div class="times" id="pHours"></div>
+        <div class="bar"><button class="sec" id="dayClose" type="button">Tüm günü kapat</button><button class="sec" id="dayOpen" type="button">Tüm günü aç</button></div>
+        <div class="list" id="pList"></div>
+      </section>
+      <section>
+        <h2>Önceki aylar</h2>
+        <div style="overflow-x:auto"><table class="months" id="pMonths"></table></div>
+      </section>
+    </div>
+    <button class="link" id="toBook" type="button">Müşteri ekranını gör (dükkanda randevu girmek için)</button>
+    <button class="link" id="logout" type="button" hidden>Bu telefonda çıkış yap</button>
+  </div>
+</div>
+
+<script>
+const SERVICES = {
+  sac:     {name:"Saç",         price:400, dur:30, desc:"30 dakika"},
+  sacsakal:{name:"Saç + Sakal", price:500, dur:60, desc:"60 dakika"}
+};
+const OPEN = 600, CLOSE = 1260, STEP = 60, DAYS_AHEAD = 14, CLOSED_DAY = 1;
+const WD = ["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"];
+const WD_LONG = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+const MON = ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
+const MON_LONG = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,"0");
+const ymd = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const hm = m => pad(Math.floor(m/60))+":"+pad(m%60);
+const parse = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d); };
+const nice = s => { const d = parse(s); return d.getDate()+" "+MON_LONG[d.getMonth()]+" "+WD_LONG[d.getDay()]; };
+const monthName = s => { const [y,m] = s.split("-").map(Number); return MON_LONG[m-1]+" "+y; };
+const tl = n => Number(n).toLocaleString("tr-TR")+" TL";
+const API = "https://wcirayxaonpibcgchqzs.supabase.co/functions/v1/api";
+async function run(fn, ...args){
+  let j;
+  try {
+    const r = await fetch(API, {method:"POST", headers:{"content-type":"application/json"}, body:JSON.stringify({fn, args})});
+    j = await r.json();
+  } catch(_){ throw new Error("Sunucuya ulaşılamadı. İnternetini kontrol edip tekrar dene."); }
+  if (j.hata) throw new Error(j.hata);
+  return j.sonuc;
+}
+const errText = e => (e && e.message ? e.message : String(e)).replace(/^(Error|Exception):\s*/,"");
+
+const CHIP = {"Bekliyor":"wait","Onaylandı":"ok","Geldi":"ok","Reddedildi":"no","Gelmedi":"no","İptal":"no"};
+const LABEL = {"Bekliyor":"Onay bekliyor","Onaylandı":"Onaylandı","Geldi":"Geldi","Reddedildi":"Reddedildi","Gelmedi":"Gelmedi","İptal":"İptal"};
+function chip(d){ const c = document.createElement("span"); c.className = "chip "+(CHIP[d]||"wait"); c.textContent = LABEL[d]||d; return c; }
+function confirmBtn(btn, label, fn){
+  btn.onclick = async () => {
+    if (!btn.dataset.sure){ btn.dataset.sure="1"; btn.textContent="Emin misin? Tekrar bas"; btn.style.background="var(--red)"; btn.style.color="#fff"; btn.style.borderColor="var(--red)"; setTimeout(()=>{ if(btn.isConnected && !btn.disabled){ delete btn.dataset.sure; btn.textContent=label; btn.style.cssText=""; } },5000); return; }
+    btn.disabled = true; btn.textContent = "İptal ediliyor…";
+    try { await fn(); } catch(e){ btn.disabled=false; delete btn.dataset.sure; btn.textContent=label; alertMsg(errText(e)); }
+  };
+}
+function alertMsg(t){ const m = !$("panel").hidden ? (!$("dash").hidden ? $("dashMsg") : $("pinMsg")) : $("msg"); m.hidden=false; m.textContent=t; m.scrollIntoView({block:"center"}); }
+function getCodes(){ try { return JSON.parse(localStorage.getItem("bk-codes")||"[]"); } catch(_){ return []; } }
+function addCode(k){ try { const c = getCodes().filter(x=>x!==k); c.unshift(k); localStorage.setItem("bk-codes", JSON.stringify(c.slice(0,20))); } catch(_){} }
+
+let todayStr = ymd(new Date()), nowMin = 0;
+let state = { svc:"sac", date:null, time:null, pDate:null, smsReq:false, codeSent:false, codePhone:"" };
+let busyList = [], pin = "";
+
+function dayList(){
+  const out = [], start = parse(todayStr);
+  for (let i=0;i<DAYS_AHEAD;i++){ const d = new Date(start); d.setDate(d.getDate()+i); out.push(d); }
+  return out;
+}
+function busy(date, start, dur){ return busyList.some(b => b.tarih===date && start < b.bit && b.bas < start+dur); }
+function free(t){
+  const dur = SERVICES[state.svc].dur;
+  if (t+dur > CLOSE) return false;
+  if (state.date===todayStr && t <= nowMin) return false;
+  return !busy(state.date, t, dur);
+}
+
+function renderDays(el, key, onPick){
+  el.innerHTML = "";
+  for (const d of dayList()){
+    const v = ymd(d), closed = d.getDay()===CLOSED_DAY;
+    const b = document.createElement("button");
+    b.type="button"; b.className="day"; b.disabled = closed; b.setAttribute("aria-pressed", state[key]===v);
+    b.innerHTML = `<span class="w">${WD[d.getDay()]}</span><span class="n">${d.getDate()}</span><span class="m">${closed?"Kapalı":MON[d.getMonth()]}</span>`;
+    b.onclick = () => onPick(v);
+    el.appendChild(b);
+  }
+}
+
+function render(){
+  $("svc").innerHTML = "";
+  for (const [k,s] of Object.entries(SERVICES)){
+    const b = document.createElement("button");
+    b.type="button"; b.className="opt"; b.setAttribute("aria-pressed", state.svc===k);
+    b.innerHTML = `<span class="n">${s.name}</span><span class="p">${tl(s.price)}</span><span class="d">${s.desc}</span>`;
+    b.onclick = () => { state.svc=k; if (state.time!==null && !free(state.time)) state.time=null; render(); };
+    $("svc").appendChild(b);
+  }
+  renderDays($("days"), "date", v => { state.date=v; state.time=null; render(); });
+  $("dayLabel").textContent = nice(state.date);
+  $("times").innerHTML = ""; let any = false;
+  for (let t=OPEN; t+STEP<=CLOSE; t+=STEP){
+    const b = document.createElement("button"), ok = free(t); any = any || ok;
+    b.type="button"; b.className="t"; b.textContent = hm(t); b.disabled = !ok; b.setAttribute("aria-pressed", state.time===t);
+    b.onclick = () => { state.time=t; render(); };
+    $("times").appendChild(b);
+  }
+  $("timesNote").hidden = any; $("timesNote").textContent = "Bu günde boş saat kalmadı, başka bir gün seç.";
+  const s = SERVICES[state.svc];
+  $("summary").innerHTML = `<div><div class="what"></div><div class="when"></div></div><div class="big"></div>`;
+  $("summary").querySelector(".what").textContent = s.name;
+  $("summary").querySelector(".when").textContent = state.time===null ? "Saat seçilmedi" : nice(state.date)+", "+hm(state.time)+" – "+hm(state.time+s.dur);
+  $("summary").querySelector(".big").textContent = tl(s.price);
+  $("submit").disabled = state.time===null;
+  $("submit").textContent = (state.smsReq && !state.codeSent) ? "Doğrulama kodu gönder" : "Randevuyu onayla";
+  $("codeWrap").hidden = !(state.smsReq && state.codeSent);
+}
+
+async function loadBusy(){
+  $("book").classList.add("loading");
+  try {
+    const r = await run("doluSaatler");
+    todayStr = r.bugun; nowMin = r.simdi; busyList = r.dolu;
+    state.smsReq = !!r.smsZorunlu;
+    $("phoneLabel").textContent = state.smsReq ? "Cep telefonu (doğrulama kodu gönderilecek)" : "Telefon (isteğe bağlı, gerekirse seni arayabilmemiz için)";
+    if (!state.date || state.date < todayStr) state.date = ymd(dayList().find(d => d.getDay()!==CLOSED_DAY));
+    if (state.time!==null && !free(state.time)) state.time = null;
+  } catch(e){ showMsg("Saatler yüklenemedi. Sayfayı yenile."); }
+  $("book").classList.remove("loading");
+  render();
+  loadMine();
+}
+
+async function loadMine(){
+  const codes = getCodes();
+  if (!codes.length){ $("mineSec").hidden = true; return; }
+  try {
+    const list = (await run("randevularim", codes)).filter(x => x.tarih >= todayStr)
+      .sort((a,b) => a.tarih.localeCompare(b.tarih) || a.saat.localeCompare(b.saat));
+    const L = $("mine"); L.innerHTML = "";
+    $("mineSec").hidden = !list.length;
+    if (list.length && $("remindMineMsg").hidden){ $("remindMine").hidden = false; musteriPush(false, "remindMine", "remindMineMsg"); }
+    for (const x of list){
+      const row = document.createElement("div"); row.className = "row";
+      row.innerHTML = `<div class="tm"></div><div class="info"><b></b><span></span></div><div></div>`;
+      row.querySelector(".tm").textContent = x.saat;
+      row.querySelector("b").textContent = nice(x.tarih);
+      row.querySelector("span").textContent = x.hizmet+" · "+tl(x.fiyat)+" · Kod "+x.kod;
+      const side = row.lastChild; side.className = "stack"; side.appendChild(chip(x.durum));
+      if (x.durum === "Bekliyor" || x.durum === "Onaylandı"){
+        const c = document.createElement("button"); c.type="button"; c.className="mini"; c.textContent="İptal et";
+        confirmBtn(c, "İptal et", async () => { await run("musteriIptal", x.kod); await loadBusy(); });
+        side.appendChild(c);
+      }
+      L.appendChild(row);
+    }
+  } catch(_){}
+}
+
+function showMsg(t){ $("msg").hidden = false; $("msg").textContent = t; }
+
+$("submit").onclick = async () => {
+  const ad = $("name").value.trim().replace(/\s+/g," ");
+  const telefon = $("phone").value.trim();
+  $("msg").hidden = true;
+  if (state.time===null) return showMsg("Önce bir saat seç.");
+  if (ad.split(" ").length < 2) return showMsg("Lütfen adını ve soyadını birlikte yaz.");
+  if (state.smsReq && !telefon) return showMsg("Telefon numaranı yaz, doğrulama kodu göndereceğiz.");
+  if (telefon && telefon.replace(/\D/g,"").length < 10) return showMsg("Telefon numarasını eksiksiz yaz.");
+  if (state.smsReq && !state.codeSent){
+    $("submit").disabled = true; $("submit").textContent = "Kod gönderiliyor…";
+    try {
+      const g = await run("kodGonder", telefon);
+      state.codeSent = true; state.codePhone = telefon;
+      render();
+      $("codeNote").textContent = "Kod " + g.numara + " numarasına gönderildi. Gelen kodu yaz:";
+      $("smsCode").value = ""; $("smsCode").focus();
+    } catch(e){ showMsg(errText(e)); render(); }
+    return;
+  }
+  const smsKod = $("smsCode").value.trim();
+  if (state.smsReq && smsKod.replace(/\D/g,"").length < 4) return showMsg("Telefonuna gelen kodu yaz.");
+  $("submit").disabled = true; $("submit").textContent = "Kaydediliyor…";
+  try {
+    const r = await run("randevuAl", {hizmet:state.svc, tarih:state.date, bas:state.time, ad, telefon, smsKod});
+    try { localStorage.setItem("bk-name", ad); localStorage.setItem("bk-phone", telefon); } catch(_){}
+    addCode(r.kod);
+    $("ticket").innerHTML = "";
+    for (const [k,v] of [["Durum","Onaylandı"],["Kod",r.kod],["İsim",r.ad],["Gün",nice(r.tarih)],["Saat",r.saat+" – "+r.bitis],["Hizmet",r.hizmet],["Ücret",tl(r.fiyat)]]){
+      const dt = document.createElement("dt"), dd = document.createElement("dd");
+      dt.textContent = k; dd.textContent = v; $("ticket").append(dt, dd);
+    }
+    state.time = null; state.codeSent = false; $("smsCode").value = "";
+    show("done");
+    $("remindDone").hidden = false; $("remindDoneMsg").hidden = true;
+    musteriPush(false, "remindDone", "remindDoneMsg");
+  } catch(e){
+    showMsg(errText(e)); await loadBusy();
+  } finally { render(); }
+};
+$("phone").addEventListener("input", () => { if (state.codeSent && $("phone").value.trim() !== state.codePhone){ state.codeSent = false; render(); } });
+$("resend").onclick = () => { state.codeSent = false; $("msg").hidden = true; $("submit").click(); };
+$("again").onclick = () => { show("book"); loadBusy(); };
+
+/* ---- Berber paneli ---- */
+async function loadPanel(){
+  $("dash").classList.add("loading");
+  try {
+    const r = await run("berberPaneli", pin, state.pDate);
+    $("dashMsg").hidden = true;
+    pin = r.anahtar; try { localStorage.setItem("bk-panel", r.anahtar); } catch(_){}
+    $("logout").hidden = false;
+    if (!berberPushDenendi){ berberPushDenendi = true; setTimeout(() => berberPush(false), 0); }
+    $("login").hidden = true; $("dash").hidden = false; $("dash").style.display = "flex";
+    state.pDate = r.gun;
+    const P = $("pPending"); P.innerHTML = ""; $("pendSec").hidden = !r.bekleyen.length;
+    $("pPendCount").textContent = r.bekleyen.length ? r.bekleyen.length+" talep" : "";
+    if (!r.bekleyen.length) P.innerHTML = `<div class="empty">Onay bekleyen randevu yok.</div>`;
+    for (const x of r.bekleyen){
+      const row = document.createElement("div"); row.className = "row pend";
+      row.innerHTML = `<div class="tm"></div><div class="info"><b></b><span></span></div><div class="acts"><button type="button" class="no">Reddet</button><button type="button" class="yes">Onayla</button></div>`;
+      row.querySelector(".tm").textContent = x.saat;
+      row.querySelector("b").textContent = x.ad;
+      row.querySelector("span").textContent = nice(x.tarih)+" · "+x.hizmet+" · "+tl(x.fiyat)+(x.telefon?" · Tel: "+x.telefon:"");
+      const [no, yes] = row.querySelectorAll(".acts button");
+      const act = async (durum, btn) => {
+        no.disabled = yes.disabled = true; btn.textContent = "Kaydediliyor…";
+        try { await run("durumGuncelle", pin, x.kod, durum); await loadPanel(); }
+        catch(e){ no.disabled = yes.disabled = false; btn.textContent = durum==="Onaylandı"?"Onayla":"Reddet"; alertMsg(errText(e)); }
+      };
+      yes.onclick = () => act("Onaylandı", yes);
+      no.onclick = () => {
+        if (no.dataset.sure){ act("Reddedildi", no); }
+        else { no.dataset.sure = "1"; no.textContent = "Emin misin?"; setTimeout(() => { if (no.isConnected && !no.disabled){ delete no.dataset.sure; no.textContent = "Reddet"; } }, 4000); }
+      };
+      P.appendChild(row);
+    }
+    $("monthName").textContent = monthName(r.buAy.ay);
+    $("sMonth").textContent = tl(r.buAy.kazanc);
+    $("sEarned").textContent = tl(r.buAyKazanilan);
+    $("sCount").textContent = r.buAy.adet;
+    $("pDayLabel").textContent = nice(r.gun);
+    renderDays($("pDays"), "pDate", v => { state.pDate = v; loadPanel(); });
+    renderHours(r);
+    const L = $("pList"); L.innerHTML = "";
+    if (!r.liste.length){ L.innerHTML = `<div class="empty">Bu gün için randevu yok.</div>`; }
+    let sum = 0;
+    for (const x of r.liste){
+      sum += x.fiyat;
+      const row = document.createElement("div"); row.className = "row";
+      row.innerHTML = `<div class="tm"></div><div class="info"><b></b><span></span></div><div class="pr"></div>`;
+      row.querySelector(".tm").textContent = x.saat;
+      row.querySelector("b").textContent = x.ad;
+      row.querySelector("span").textContent = x.hizmet+" · "+x.saat+"–"+x.bitis+(x.telefon?" · Tel: "+x.telefon:"");
+      const pr = row.querySelector(".pr"); pr.textContent = tl(x.fiyat); pr.style.cssText = "display:flex;flex-direction:column;align-items:flex-end;gap:4px";
+      pr.appendChild(chip(x.durum));
+      const c = document.createElement("button"); c.type="button"; c.className="mini"; c.textContent="İptal et";
+      confirmBtn(c, "İptal et", async () => { await run("durumGuncelle", pin, x.kod, "İptal"); await loadPanel(); });
+      if (x.durum === "Onaylandı" && x.gecti){
+        const att = document.createElement("div"); att.className = "att";
+        for (const [lbl, d] of [["Geldi","Geldi"],["Gelmedi","Gelmedi"]]){
+          const b = document.createElement("button"); b.type="button"; b.className="mini"; b.textContent=lbl;
+          b.onclick = async () => { b.disabled = true; try { await run("durumGuncelle", pin, x.kod, d); await loadPanel(); } catch(e){ b.disabled=false; alertMsg(errText(e)); } };
+          att.appendChild(b);
+        }
+        pr.appendChild(att);
+      } else pr.appendChild(c);
+      if (x.durum === "Onaylandı" || x.durum === "Geldi") sum += 0; else sum -= x.fiyat;
+      L.appendChild(row);
+    }
+    if (r.liste.length){ const t = document.createElement("div"); t.className="row"; t.innerHTML = `<div></div><div class="info"><b>Günün onaylı toplamı</b><span>${r.liste.length} randevu</span></div><div class="pr">${tl(sum)}</div>`; L.appendChild(t); }
+    const T = $("pMonths");
+    T.innerHTML = r.aylar.length ? "<tr><th>Ay</th><th>Randevu</th><th>Kazanç</th></tr>" : "<tr><td>Henüz kayıt yok</td></tr>";
+    for (const m of r.aylar){ const tr = document.createElement("tr"); tr.innerHTML = `<td>${monthName(m.ay)}</td><td>${m.adet}</td><td>${tl(m.kazanc)}</td>`; T.appendChild(tr); }
+  } catch(e){
+    const saved = (() => { try { return localStorage.getItem("bk-panel"); } catch(_){ return null; } })();
+    if (saved && pin === saved){ try { localStorage.removeItem("bk-panel"); } catch(_){} pin = ""; $("pinMsg").hidden = false; $("pinMsg").textContent = "Şifre değişmiş, yeniden giriş yap."; }
+    else { $("pinMsg").hidden = false; $("pinMsg").textContent = errText(e); }
+    $("login").hidden = false; $("dash").hidden = true; $("logout").hidden = true;
+  }
+  $("dash").classList.remove("loading");
+}
+function renderHours(r){
+  const H = $("pHours"); H.innerHTML = "";
+  const booked = new Set();
+  for (const x of r.liste){ const [hh,mm] = x.saat.split(":").map(Number); const s = hh*60+mm; for (let t=OPEN; t<CLOSE; t+=STEP) if (s < t+STEP && t < s+60) booked.add(t); }
+  const closed = new Set(r.kapali);
+  const all = [];
+  for (let t=OPEN; t+STEP<=CLOSE; t+=STEP){
+    all.push(t);
+    const b = document.createElement("button"); b.type = "button";
+    const isB = booked.has(t), isC = closed.has(t);
+    b.className = "h"+(isC?" closed":"")+(isB?" booked":"");
+    b.innerHTML = `<span>${hm(t)}</span><small>${isB?"Randevu":isC?"Kapalı":"Açık"}</small>`;
+    if (isB) b.disabled = true;
+    else b.onclick = async () => {
+      b.disabled = true;
+      try { await run("saatleriAyarla", pin, r.gun, [t], !isC); await loadPanel(); }
+      catch(e){ b.disabled = false; alertMsg(errText(e)); }
+    };
+    H.appendChild(b);
+  }
+  const free = all.filter(t => !booked.has(t));
+  const bulk = (kapat, btn) => async () => {
+    btn.disabled = true;
+    try { await run("saatleriAyarla", pin, r.gun, free, kapat); await loadPanel(); }
+    catch(e){ alertMsg(errText(e)); }
+    btn.disabled = false;
+  };
+  $("dayClose").onclick = bulk(true, $("dayClose"));
+  $("dayOpen").onclick = bulk(false, $("dayOpen"));
+  $("dayClose").disabled = free.every(t => closed.has(t));
+  $("dayOpen").disabled = !free.some(t => closed.has(t));
+}
+$("pinBtn").onclick = () => { pin = $("pin").value; $("pinMsg").hidden = true; loadPanel(); };
+$("pin").addEventListener("keydown", e => { if (e.key==="Enter") $("pinBtn").click(); });
+
+function show(which){
+  for (const id of ["book","done","panel"]){
+    $(id).hidden = id!==which;
+    $(id).style.display = id===which ? "flex" : "none";
+  }
+  window.scrollTo(0,0);
+}
+$("toPanel").onclick = () => {
+  show("panel");
+  let saved = null; try { saved = localStorage.getItem("bk-panel"); } catch(_){}
+  if (saved){ pin = saved; $("login").hidden = true; loadPanel(); }
+};
+$("logout").onclick = () => {
+  try { localStorage.removeItem("bk-panel"); } catch(_){}
+  pin = ""; $("pin").value = ""; $("dash").hidden = true; $("login").hidden = false; $("logout").hidden = true;
+};
+$("toBook").onclick = () => { show("book"); loadBusy(); };
+
+try { $("name").value = localStorage.getItem("bk-name") || ""; $("phone").value = localStorage.getItem("bk-phone") || ""; } catch(_){}
+state.date = ymd(dayList().find(d => d.getDay()!==CLOSED_DAY));
+render();
+loadBusy();
+function openPanelWith(key){ pin = key; $("toPanel").hidden = false; show("panel"); $("login").hidden = true; loadPanel(); }
+(() => {
+  let saved = null; try { saved = localStorage.getItem("bk-panel"); } catch(_){}
+  const b = new URLSearchParams(location.search).get("b");
+  if (b) openPanelWith(b);
+  else if (saved) openPanelWith(saved);
+})();
+
+/* ---- Bildirimler (web push) ---- */
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const pushOK = "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
+if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("message", e => {
+  if (e.data !== "yenile") return;
+  if (!$("panel").hidden && !$("dash").hidden) loadPanel(); else if (!$("book").hidden) loadBusy();
+});
+function b64ToU8(s){ s = s.replace(/-/g,"+").replace(/_/g,"/"); s += "=".repeat((4 - s.length % 4) % 4); return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+async function pushAbone(rol, veri, sor){
+  if (!pushOK && !sor) return false;
+  if (!pushOK) throw new Error(isIOS && !standalone
+    ? "iPhone'da bildirim için önce bu sayfayı Safari'de Paylaş → “Ana Ekrana Ekle” ile ekle, sonra ana ekrandaki simgeden açıp tekrar bas."
+    : "Bu tarayıcı bildirimleri desteklemiyor.");
+  if (Notification.permission !== "granted"){
+    if (!sor) return false;
+    const izin = await Notification.requestPermission();
+    if (izin !== "granted") throw new Error("Bildirim izni verilmedi. Telefonun ayarlarından bu site için bildirimlere izin verebilirsin.");
+  }
+  const reg = await navigator.serviceWorker.ready;
+  let sub = await reg.pushManager.getSubscription();
+  if (!sub){ const key = await run("bildirimAnahtari"); sub = await reg.pushManager.subscribe({userVisibleOnly:true, applicationServerKey:b64ToU8(key)}); }
+  await run("bildirimAbone", sub.toJSON(), rol, veri);
+  return true;
+}
+function pushDurum(btnId, msgId, acik, metin){
+  $(btnId).hidden = acik; const m = $(msgId); m.hidden = !metin; m.textContent = metin || "";
+}
+async function musteriPush(sor, btnId, msgId){
+  const kodlar = getCodes(); if (!kodlar.length) return;
+  try {
+    const ok = await pushAbone("musteri", kodlar, sor);
+    if (ok) pushDurum(btnId, msgId, true, "🔔 Hatırlatma açık — randevudan 2 saat önce bildirim gelecek.");
+    else pushDurum(btnId, msgId, false, "");
+  } catch(e){ pushDurum(btnId, msgId, false, errText(e)); }
+}
+$("remindDone").onclick = () => musteriPush(true, "remindDone", "remindDoneMsg");
+$("remindMine").onclick = () => musteriPush(true, "remindMine", "remindMineMsg");
+let berberPushDenendi = false;
+async function berberPush(sor){
+  try {
+    const ok = await pushAbone("berber", pin, sor);
+    if (ok){
+      pushDurum("notifBtn", "notifMsg", true, "🔔 Bildirimler bu telefonda açık. Yeni randevu ve iptallerde bildirim gelecek.");
+      if (sor) await run("bildirimDene", pin);
+    } else pushDurum("notifBtn", "notifMsg", false, "");
+  } catch(e){ pushDurum("notifBtn", "notifMsg", false, errText(e)); }
+}
+$("notifBtn").onclick = () => berberPush(true);
+</script>
+</body>
+</html>
