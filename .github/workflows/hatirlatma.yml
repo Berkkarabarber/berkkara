@@ -1,0 +1,13 @@
+name: Randevu hatirlatma
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+jobs:
+  hatirlat:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -sS --max-time 60 -X POST https://berkkara.vercel.app/api \
+            -H 'content-type: application/json' \
+            -d '{"fn":"hatirlatma","args":[]}'
