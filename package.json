@@ -1,0 +1,9 @@
+{
+  "name": "berkkara",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@neondatabase/serverless": "0.10.4",
+    "web-push": "3.6.7"
+  }
+}

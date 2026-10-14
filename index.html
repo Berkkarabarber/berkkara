@@ -223,7 +223,7 @@ const parse = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y
 const nice = s => { const d = parse(s); return d.getDate()+" "+MON_LONG[d.getMonth()]+" "+WD_LONG[d.getDay()]; };
 const monthName = s => { const [y,m] = s.split("-").map(Number); return MON_LONG[m-1]+" "+y; };
 const tl = n => Number(n).toLocaleString("tr-TR")+" TL";
-const API = "https://wcirayxaonpibcgchqzs.supabase.co/functions/v1/api";
+const API = "/api";
 async function run(fn, ...args){
   let j;
   try {
